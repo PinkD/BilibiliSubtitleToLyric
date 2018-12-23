@@ -1,13 +1,18 @@
 # BilibiliSubtitleToLyric
 
-download a bilibili video subtile as a lrc file for musics
+download a bilibili video subtitle as a lrc file for music videos
 
 ## Usage
 
 ```bash
-python main.py
+python main.py av170001
 ```
 
-then input the av number
+or 
+
+```bash
+python main.py 170001
+```
+
 
 

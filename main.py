@@ -1,6 +1,7 @@
 import gzip
 import json
 import argparse
+import sys
 from urllib.request import build_opener
 
 import re
@@ -10,17 +11,20 @@ url = "https://www.bilibili.com/av{}"
 opener = build_opener()
 opener.addheaders.clear()
 opener.addheaders.append(("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.80 Safari/537.36"))
-args = argparse.ArgumentParser()
-args.add_argument("av", help="av number, both av170001 and 170001 are OK")
+argParser = argparse.ArgumentParser()
+argParser.add_argument("av", help="av number, both av170001 and 170001 are OK")
 
 if __name__ == "__main__":
-    args = args.parse_args()
-    av = args.av
+    if len(sys.argv) < 2:
+        argParser.print_help()
+        sys.exit(1)
+    argParser = argParser.parse_args()
+    av = argParser.av
     if av.startswith("av"):
         av = av[2:]
     response = opener.open(url.format(av)).read()
     response = gzip.decompress(response).decode()
-    data = re.findall("__INITIAL_STATE__=\{.*\:\{.*\:.*\}\};", response)
+    data = re.findall("__INITIAL_STATE__={.*:{.*:.*}.*};", response)
 
     try:
         data = json.loads(data.pop()[18:-1])
